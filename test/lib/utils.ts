@@ -3,6 +3,7 @@ import { ExclusiveTestFunction, TestFunction } from 'mocha'
 export { datetime } from '../../src/dateutil'
 import { datetime } from '../../src/dateutil'
 import { RRule, RRuleSet } from '../../src'
+import assert from 'assert'
 
 const assertDatesEqual = function (
   actual: Date | Date[],
@@ -242,13 +243,25 @@ export function expectedDate(
   // get the tzoffset between the client tz and the target tz
   const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const dateInLocalTZ = new Date(
-    startDate.toLocaleString(undefined, { timeZone: localTimeZone })
+    startDate.toLocaleString(undefined, {
+      dateStyle: 'short',
+      timeStyle: 'short',
+      hour12: false,
+      timeZone: localTimeZone,
+    })
   )
   const dateInTargetTZ = new Date(
-    startDate.toLocaleString(undefined, { timeZone: targetZone })
+    startDate.toLocaleString(undefined, {
+      dateStyle: 'short',
+      timeStyle: 'short',
+      hour12: false,
+      timeZone: targetZone,
+    })
   )
   const tzOffset = dateInTargetTZ.getTime() - dateInLocalTZ.getTime()
 
-  return new Date(startDate.getTime() - tzOffset)
+  const newDate = new Date(startDate.getTime() - tzOffset)
+  assert(newDate.toString() !== 'Invalid Date')
+  return newDate
   // return new Date(new Date(startDate.getTime() + tzOffset).toLocaleDateString(undefined, { timeZone: localTimeZone }))
 }

@@ -1,4 +1,4 @@
-import { timeToUntilString } from './dateutil'
+import { timeToUntilString, datetime } from './dateutil'
 
 export class DateWithZone {
   public date: Date
@@ -36,12 +36,45 @@ export class DateWithZone {
 
     const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const dateInLocalTZ = new Date(
-      this.date.toLocaleString(undefined, { timeZone: localTimeZone })
+      this.date.toLocaleString(undefined, {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        hour12: false,
+        timeZone: localTimeZone,
+      })
     )
     const dateInTargetTZ = new Date(
-      this.date.toLocaleString(undefined, { timeZone: this.tzid ?? 'UTC' })
+      this.date.toLocaleString(undefined, {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        hour12: false,
+        timeZone: this.tzid ?? 'UTC',
+      })
     )
     const tzOffset = dateInTargetTZ.getTime() - dateInLocalTZ.getTime()
+    console.log({
+      local: this.date.toLocaleString(undefined, {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        hour12: false,
+        timeZone: localTimeZone,
+      }),
+      target: this.date.toLocaleString(undefined, {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        hour12: false,
+        timeZone: this.tzid ?? 'UTC',
+      }),
+      date: this.date,
+      localTimeZone,
+      targetTimeZone: this.tzid ?? 'UTC',
+      dateInLocalTZ,
+      dateInTargetTZ,
+      tzOffset,
+      tzOffset_1000: tzOffset / 1000,
+      tzOffset_1000_60: tzOffset / 1000 / 60,
+      tzOffset_1000_60_60: tzOffset / 1000 / 60 / 60,
+    })
 
     return new Date(this.date.getTime() - tzOffset)
   }

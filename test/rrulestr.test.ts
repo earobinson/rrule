@@ -3,6 +3,7 @@ import { RRule, RRuleSet, rrulestr, Frequency } from '../src'
 import { expect } from 'chai'
 import { Days } from '../src/rrule'
 import { parseInput } from '../src/rrulestr'
+import { MONTH_DAYS } from './dateutil'
 
 describe('rrulestr', function () {
   // Enable additional toString() / fromString() tests
@@ -394,6 +395,26 @@ describe('parseInput', () => {
         {
           interval: 2,
           freq: Frequency.WEEKLY,
+        },
+      ],
+    })
+  })
+
+  it('parses an input into a structure', () => {
+    const output = parseInput(
+      'DTSTART;TZID=Pacific/Kiritimati:20221205T000000\n' +
+        'RRULE:FREQ=MONTHLY;COUNT=4;INTERVAL=1;BYMONTHDAY=-1',
+      {}
+    )
+    expect(output).to.deep.include({
+      dtstart: datetime(2022, 12, 5, 0, 0, 0),
+      tzid: 'Pacific/Kiritimati',
+      rrulevals: [
+        {
+          interval: 1,
+          freq: Frequency.MONTHLY,
+          bymonthday: -1,
+          count: 4,
         },
       ],
     })

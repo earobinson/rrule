@@ -93,6 +93,7 @@ export default class IterResult<M extends QueryMethodTypes> {
       default:
         return (res.length ? res[res.length - 1] : null) as IterResultType<M>
     }
+    console.log({ res })
   }
 
   clone() {

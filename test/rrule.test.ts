@@ -4138,7 +4138,28 @@ describe('RRule', function () {
     expect(rrule2.all()).to.deep.equal([datetime(990, 1, 1, 0, 0, 0)])
   })
 
-  describe('time zones, when recurrence is in dst', () => {
+  it.only('calculates Pacific/Kiritimati correctly', () => {
+    const start = new Date('2022-12-01T00:00:00.000Z')
+
+    const rrule = new RRule({
+      freq: RRule.MONTHLY,
+      interval: 1,
+      bymonthday: [-1],
+      count: 4,
+      dtstart: start,
+      tzid: 'Pacific/Kiritimati',
+    })
+
+    console.log({ a: rrule.all(), start })
+    expect(rrule.all()).to.deep.equal([
+      new Date('2022-12-31T00:00:00.000Z'),
+      new Date('2023-01-31T00:00:00.000Z'),
+      new Date('2023-02-28T00:00:00.000Z'),
+      new Date('2023-03-31T00:00:00.000Z'),
+    ])
+  })
+
+  describe.only('time zones, when recurrence is in dst', () => {
     const targetZone = 'America/Los_Angeles'
     const startDate = datetime(2013, 8, 6, 11, 0, 0)
     const dtstart = startDate
@@ -4154,6 +4175,7 @@ describe('RRule', function () {
       })
       const recurrence = rule.all()[0]
       const expected = expectedDate(startDate, currentLocalDate, targetZone)
+      console.log({ expected })
 
       expect(recurrence).to.deep.equal(expected)
 

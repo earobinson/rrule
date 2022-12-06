@@ -159,6 +159,7 @@ export class RRule implements QueryMethods {
       result = this._iter(new IterResult('all', {}))
       this._cacheAdd('all', result)
     }
+    console.log({ result })
     return result
   }
 
